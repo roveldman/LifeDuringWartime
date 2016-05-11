@@ -40,7 +40,7 @@ package
 			add(title);
 			back = new FlxSprite(0, 300, Back);
 			back2 = new FlxSprite(back.width, 300, Back);
-
+			
 			add(back);
 			add(back2);
 			
@@ -66,6 +66,11 @@ package
 			lines.push("Vanessa: Still tired?");
 			lines.push("Sara: This road is so long.");
 			lines.push("Vanessa: I definitely hear you there.");
+			lines.push("Sara: Hey look up ahead! It looks like an abandoned gas station!");
+			lines.push("Vanessa: But we've seen dozens of those.");
+			lines.push("Sara: Let's check it out.");
+			lines.push("Vanessa: Alright.");
+			lines.push("Vanessa: I guess.");
 		
 		}
 		
@@ -79,14 +84,17 @@ package
 					if (DialogueManager.isComplete())
 					{
 						var line:String = lines.shift();
-						if (line != null){
+						if (line != null)
+						{
 							DialogueManager.nextMessage(line);
 							FlxG.log("change");
 							FlxG.stage.addChild(DialogueManager.profile);
-						} else {
+						}
+						else
+						{
 							DialogueManager.finishText()
 							DialogueManager.hide();
-							FlxG.fade(0xff000000, 2);
+							FlxG.fade(0xff000000, 2,launchGameState);
 						}
 						
 					}
@@ -108,8 +116,8 @@ package
 			if (back.y > 0 && moveState == 1)
 			{
 				back.y -= .25 + (back.y / 300);
-								back2.y -= .25 + (back.y / 300);
-
+				back2.y -= .25 + (back.y / 300);
+				
 				title.y -= .25 + (back.y / 300);
 				van.y -= .25 + (back.y / 300);
 			}
@@ -132,7 +140,6 @@ package
 				DialogueManager.show();
 				DialogueManager.nextMessage(lines.shift());
 				FlxG.stage.addChild(DialogueManager.profile);
-				
 			}
 			
 			back.x -= 3;
@@ -145,6 +152,10 @@ package
 			{
 				back2.x = back.width - 3
 			}
+		}
+		
+		public function launchGameState():void {
+			FlxG.switchState(new GameState);
 		}
 	
 	}

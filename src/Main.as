@@ -9,7 +9,7 @@ package
 		
 		public function Main()
 		{
-			super(320, 256, VanState, 2);
+			super(320, 256, GameState, 2);
 			DialogueManager.initDialogue();
 			FlxG.stage.addChild(DialogueManager.backRect);
 			FlxG.stage.addChild(DialogueManager.textView);
