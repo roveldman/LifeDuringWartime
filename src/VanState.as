@@ -11,6 +11,8 @@ package
 	{
 		[Embed(source = "/snd/music.mp3")]
 		public static const Music:Class;
+		[Embed(source = "/snd/curious.mp3")]
+		public static const Curious:Class;
 		
 		[Embed(source = "/img/van.png")]
 		public static const Van:Class;
@@ -28,13 +30,71 @@ package
 		private var title:FlxSprite;
 		private var moveState:int = 0;
 		private var lines:Array;
+		private var darkness:FlxSprite;
 		
 		public override function create():void
 		{
+			lines = new Array();
+			if (Counter.staticpoint == 0)
+			{
+				FlxG.camera.color = 0x8888aa;
+				FlxG.playMusic(Curious);
+				moveState = 0;
+				lines.push("Sara: ... so as I was saying, it's a lot safer this way.");
+				lines.push("Vanessa: Whatever you say.");
+				lines.push("Sara: I like it here more anyway. Less people, less government. It's just peaceful.");
+				lines.push("Vanessa: ...");
+				lines.push("Sara: What is it?");
+				lines.push("Jonson: Let's hope there actually is. You see, There's so many rumors floating around. I don't know what to believe.");
+				lines.push("Jonson: \"Up north, there's clean water and food enough so nobody starves\", they said. They lured us across the whole country. For Nothing.");
+				lines.push("Jonson: Now what? Cleveland had nothing. There was nothing but mold and dust. Detroit was barren, too.");
+				lines.push("Sara: You guys keep reminding me, but I promise this time our luck will change. I can just feel it.");
+				lines.push("Vanessa: We have to hang in there, until then I guess. When will we find this place we're looking for? Can we ever find a place that isn't miserable?");
+				lines.push("Vanessa: Somewhere we can at least scrape by?");
+				lines.push("Vanessa: Sometimes, it just feels like there's nothing to hold on for anymore.");
+				lines.push("Sara: ... well, we're alive. After the last few years of disasters, that's not a given for everyone.");
+				lines.push("Sara: I wish there was some way to tell you I just want the best for us-");
+				lines.push("Vanessa: Looks like we're running out of gas.");
+				lines.push("Sara: For real?");
+				lines.push("Jonson: Yes for real.");
+				lines.push("Sara: Hey look up ahead. It looks like an abandoned gas station.");
+				lines.push("Vanessa: Just about every place out here is abandoned. We've seen dozens of those. There's no gas there.");
+				lines.push("Sara: Well, duh. We'll have to wait for a vendor bot to come along the road for gas, but in the meantime let's check it out.");
+				lines.push("Sara: It'll at least be somewhere to sleep.");
+				lines.push("Vanessa: You're so optimistic all the time Sara.");
+				lines.push("Sara: I guess.");
+				lines.push("Vanessa: You can just drive and drive and drive without any promise of where we're headed.");
+				lines.push("Sara: And you couldn't?");
+				lines.push("Jonson: Why do you think we have you drive?");
+				lines.push("Sara: I see.");
+				lines.push("Sara: Don't you guys give up yet...");
+				lines.push("Sara: Here it is.");
+			}
+			if (Counter.staticpoint == 2)
+			{
+				moveState = -1;
+				FlxG.playMusic(Music);
+				lines.push("Sara: It's a good thing that vendor bot came by.");
+				lines.push("Vanessa: I can't believe those things drive themselves. With all that flammable cargo.");
+				lines.push("Jonson: Is the Dreamboy 64 charged yet?");
+				lines.push("Vanessa: I don't know. How do I tell?");
+				lines.push("Jonson: The display says it has three quarter battery, so you should be able to try it.");
+				lines.push("Vanessa: I guess I'll go first, since I found it.");
+				lines.push("Vanessa: I wonder who lost it there? Who knows how long it was sitting there.");
+				lines.push("Jonson: Maybe thirty years.");
+				lines.push("Sara: I want to try next!");
+				lines.push("Vanessa: Sara, you're driving.");
+				lines.push("Sara: I mean we can stop sometime.");
+				lines.push("Vanessa: Well, I guess I'll put it on.");
+				lines.push("Vanessa: Um... Jonson?");
+				lines.push("Vanessa: If my face looks freaked out at all I want you to pull this thing off of me, okay?");
+				lines.push("Jonson: It should be perfectly safe, every household had one of these.");
+				lines.push("Vanessa: Here goes nothing.");
+			}
+			
 			super.create();
 			
 			FlxG.bgColor = 0xff00ff
-			FlxG.playMusic(Music);
 			
 			title = new FlxSprite(0, 0, Title);
 			add(title);
@@ -60,17 +120,6 @@ package
 			title.alpha = 0;
 			
 			FlxG.camera.y = 0;
-			lines = new Array();
-			lines.push("Vanessa: ... so as I was saying, it's a lot safer this way.");
-			lines.push("Sara: Whatever you say.");
-			lines.push("Vanessa: Still tired?");
-			lines.push("Sara: This road is so long.");
-			lines.push("Vanessa: I definitely hear you there.");
-			lines.push("Sara: Hey look up ahead! It looks like an abandoned gas station!");
-			lines.push("Vanessa: But we've seen dozens of those.");
-			lines.push("Sara: Let's check it out.");
-			lines.push("Vanessa: Alright.");
-			lines.push("Vanessa: I guess.");
 		
 		}
 		
@@ -87,14 +136,15 @@ package
 						if (line != null)
 						{
 							DialogueManager.nextMessage(line);
-							FlxG.log("change");
+							
 							FlxG.stage.addChild(DialogueManager.profile);
 						}
 						else
 						{
 							DialogueManager.finishText()
 							DialogueManager.hide();
-							FlxG.fade(0xff000000, 2,launchGameState);
+							FlxG.fade(0xff000000, 5, launchGameState);
+							FlxG.music.fadeOut(4);
 						}
 						
 					}
@@ -154,7 +204,9 @@ package
 			}
 		}
 		
-		public function launchGameState():void {
+		public function launchGameState():void
+		{
+			Counter.staticpoint++;
 			FlxG.switchState(new GameState);
 		}
 	

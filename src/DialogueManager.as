@@ -31,6 +31,9 @@ package
 		[Embed(source = "/img/sara.png")]
 		public static const Sara:Class;
 		
+		[Embed(source = "/img/jonson.png")]
+		public static const Jonson:Class;
+		
 		private static var messageArray:Array = new Array();
 		private static var printing:Boolean = false;
 		private static var next:String = "c0000";
@@ -76,7 +79,7 @@ package
 			profile.alpha = 0;
 		}
 		
-		public static function nextMessage(next:String = null):String
+		public static function nextMessage(next:String = null):void
 		{
 			hide();
 			if (next.substring(0, 3) == "Van")
@@ -87,25 +90,22 @@ package
 			{
 				profile = new Sara();
 			}
+			if (next.substring(0, 3) == "Jon")
+			{
+				profile = new Jonson();
+			}
 			profile.x = 12;
 			profile.y = 12;
 			show();
-			
 			if (printing)
 			{
 				finishText();
-				return null;
+				return;
 			}
-			else
-			{
-				printing = true;
-			}
+
 			// TODO: add shadow
 			
-			textView.text = "";
-			
-			var currentCharCode:String = next.charAt(0);
-			
+			textView.text = "";			
 			messageArray = new Array();
 			messageArray = next.split("");
 			finishText();
@@ -120,13 +120,13 @@ package
 					printing = false;
 					return;
 				}
-				if (character != " " && character != "!" && character != "," && character != ".")
+				if (character != " " && character != "!" && character != "," && character != "."&& character != "?"&& character != ":")
 				{
 					FlxG.play(CharPrint, textView.alpha);
 					timer.delay = 50;
-				}
-				else
-				{
+				} else if (character == "." || character == "," || character == "?" || character == ":"){
+					timer.delay = 300;
+				} else {
 					timer.delay = 0;
 				}
 				
@@ -134,7 +134,7 @@ package
 			}
 			
 			timer.start();
-			return currentCharCode;
+			return;
 		}
 		
 		public static function finishText():void
