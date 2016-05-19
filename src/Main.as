@@ -1,5 +1,6 @@
 package
 {
+	import flash.events.Event;
 	import org.flixel.*;
 	
 	[SWF(width = "640", height = "512", backgroundColor = "#000000")]
@@ -9,14 +10,14 @@ package
 		
 		public function Main()
 		{
-			super(320, 256, GameState, 2);
+			super(320, 256, LogoState, 2);
 			DialogueManager.initDialogue();
 			FlxG.stage.addChild(DialogueManager.backRect);
 			FlxG.stage.addChild(DialogueManager.textView);
 			FlxG.stage.addChild(DialogueManager.profile);
 			
 			FlxG.bgColor = 0xffff00ff;
-			forceDebugger = true;
+			forceDebugger = false;
 			useDefaultHotKeys = false;
 		}
 	}

@@ -34,6 +34,9 @@ package
 		[Embed(source = "/img/jonson.png")]
 		public static const Jonson:Class;
 		
+		[Embed(source = "/img/boy.png")]
+		public static const Boy:Class;
+		
 		private static var messageArray:Array = new Array();
 		private static var printing:Boolean = false;
 		private static var next:String = "c0000";
@@ -93,6 +96,10 @@ package
 			if (next.substring(0, 3) == "Jon")
 			{
 				profile = new Jonson();
+			}
+			if (next.substring(0, 3) == "Boy")
+			{
+				profile = new Boy();
 			}
 			profile.x = 12;
 			profile.y = 12;

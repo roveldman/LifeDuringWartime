@@ -6,7 +6,7 @@ package
 	 */
 	public class Counter 
 	{
-		public static var staticpoint:int = 2;
+		public static var staticpoint:int = 0;
 	}
 
 }

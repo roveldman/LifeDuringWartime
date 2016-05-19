@@ -11,6 +11,7 @@ package
 	{
 		[Embed(source = "/snd/music.mp3")]
 		public static const Music:Class;
+		
 		[Embed(source = "/snd/curious.mp3")]
 		public static const Curious:Class;
 		
@@ -35,17 +36,20 @@ package
 		public override function create():void
 		{
 			lines = new Array();
-			if (Counter.staticpoint == 0)
+			FlxG.playMusic(Curious);
+			if (Counter.staticpoint != 2)
 			{
+				Counter.staticpoint = 0;
 				FlxG.camera.color = 0x8888aa;
 				FlxG.playMusic(Curious);
 				moveState = 0;
-				lines.push("Sara: ... so as I was saying, it's a lot safer this way.");
+				lines.push("Sara: ... so as I was saying, this will be a good place for all of us.");
 				lines.push("Vanessa: Whatever you say.");
 				lines.push("Sara: I like it here more anyway. Less people, less government. It's just peaceful.");
 				lines.push("Vanessa: ...");
 				lines.push("Sara: What is it?");
-				lines.push("Jonson: Let's hope there actually is. You see, There's so many rumors floating around. I don't know what to believe.");
+				lines.push("Vanessa: Let's hope it actually is.");
+				lines.push("Jonson: There's so many rumors floating around. I don't know what to believe.");
 				lines.push("Jonson: \"Up north, there's clean water and food enough so nobody starves\", they said. They lured us across the whole country. For Nothing.");
 				lines.push("Jonson: Now what? Cleveland had nothing. There was nothing but mold and dust. Detroit was barren, too.");
 				lines.push("Sara: You guys keep reminding me, but I promise this time our luck will change. I can just feel it.");
@@ -77,10 +81,8 @@ package
 				lines.push("Sara: It's a good thing that vendor bot came by.");
 				lines.push("Vanessa: I can't believe those things drive themselves. With all that flammable cargo.");
 				lines.push("Jonson: Is the Dreamboy 64 charged yet?");
-				lines.push("Vanessa: I don't know. How do I tell?");
-				lines.push("Jonson: The display says it has three quarter battery, so you should be able to try it.");
-				lines.push("Vanessa: I guess I'll go first, since I found it.");
-				lines.push("Vanessa: I wonder who lost it there? Who knows how long it was sitting there.");
+				lines.push("Vanessa: I put it out in the sun all morning, so I think it should be ready. I guess I'll go first.");
+				lines.push("Sara: I wonder who lost it there? Who knows how long it was sitting there.");
 				lines.push("Jonson: Maybe thirty years.");
 				lines.push("Sara: I want to try next!");
 				lines.push("Vanessa: Sara, you're driving.");
@@ -143,6 +145,7 @@ package
 						{
 							DialogueManager.finishText()
 							DialogueManager.hide();
+							FlxG.music.fadeOut(3);
 							FlxG.fade(0xff000000, 5, launchGameState);
 							FlxG.music.fadeOut(4);
 						}

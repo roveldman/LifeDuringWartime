@@ -1,6 +1,5 @@
 package
 {
-	import mx.core.FlexSprite;
 	import org.flixel.*;
 	
 	/**
@@ -32,12 +31,26 @@ package
 		public static const Hole:Class;
 		[Embed(source = "/img/white.png")]
 		public static const White:Class;
+		[Embed(source = "/img/cellar.png")]
+		public static const Cellar:Class;
+		[Embed(source = "/img/swingset.png")]
+		public static const Swingset:Class;
+		[Embed(source = "/img/bookshelf.png")]
+		public static const Bookshelf:Class;
+		[Embed(source = "/img/strip.png")]
+		public static const Strip:Class;
+		[Embed(source = "/img/door.png")]
+		public static const Door:Class;
+		[Embed(source = "/img/computer.png")]
+		public static const Computer:Class;
+		[Embed(source = "/img/gate.png")]
+		public static const Gate:Class;
 		
 		[Embed(source = '/csv/lvl1.csv', mimeType = "application/octet-stream")]
 		public static const Level1:Class;
 		
-		[Embed(source = "/snd/curious.mp3")]
-		public static const Curious:Class;
+		[Embed(source = "/snd/BlipMellow.mp3")]
+		public static const BlipMellow:Class;
 		
 		private var stationback:FlxSprite;
 		private var station:FlxSprite;
@@ -45,6 +58,10 @@ package
 		private var van:FlxSprite;
 		private var vanbox:FlxSprite;
 		private var dreamboy:FlxSprite;
+		private var swingset:FlxSprite;
+		private var gate:FlxSprite;
+		private var door:FlxSprite;
+		private var computer:FlxSprite;
 		private var hole:FlxSprite;
 		private var focus:FlxObject;
 		private var items:FlxGroup;
@@ -59,11 +76,10 @@ package
 		private var playerlight:Light;
 		private var lightsgroup:FlxGroup;
 		private var lines:Array;
+		private var boydone:Boolean;
 		
 		public override function create():void
 		{
-			Counter.staticpoint = 1;
-			//FlxG.playMusic(Curious);
 			DialogueManager.initDialogue();
 			FlxG.camera.alpha = 0;
 			darkness = new FlxSprite(0, 0);
@@ -72,7 +88,7 @@ package
 			darkness.scrollFactor.x = darkness.scrollFactor.y = 0;
 			darkness.blend = "multiply";
 			
-			player = new FlxSprite(140, 270, Player);
+			player = new FlxSprite(180, 220, Player);
 			player.loadGraphic(Player, true, false, 32, 64);
 			player.width = 10;
 			player.offset.x = 11;
@@ -95,9 +111,14 @@ package
 			station = new FlxSprite(128, 165 - 10, Station);
 			station.offset.y = 169 - 10
 			
-			van = new FlxSprite(128, 250, Van);
-			vanbox = new FlxSprite(134, 250 - 10);
+			van = new FlxSprite(128 - 78, 250, Van);
+			vanbox = new FlxSprite(134 - 78, 250 - 10);
 			vanbox.makeGraphic(110, 16, 0x00ffffff);
+			
+			swingset = new FlxSprite(70 * 32, 5 * 32);
+			swingset.loadGraphic(Swingset, true, false, 128, 96);
+			swingset.addAnimation("swing", [0, 0, 0, 1, 0, 0, 0], 1);
+			swingset.play("swing");
 			
 			van.offset.y = 62;
 			
@@ -105,8 +126,23 @@ package
 			
 			add(new FlxSprite(-200, -200, Grass));
 			add(new FlxSprite(800, -200, Grass));
-			add(new FlxSprite(1200, 400, Cellar));
-			add(new FlxSprite(2000, 0, White));
+			add(new FlxSprite(35 * 32 - 16, 170, Cellar));
+			add(new FlxSprite(1900, -32 * 4, White));
+			add(new FlxSprite(32 * 65, 32 * 9 - 16, Strip));
+			door = new FlxSprite(32 * 78, -32 * 6 + 21, Door);
+			add(new FlxSprite(32 * 45, 32 * 22, Computer));
+			add(new FlxSprite(32 * 46, 32 * 22, Computer));
+			add(new FlxSprite(32 * 47, 32 * 22, Computer));
+			add(new FlxSprite(32 * 48, 32 * 22, Computer));
+			add(door);
+			
+			computer = new FlxSprite(32 * 21, 32 * 15, Computer);
+			items.add(computer);
+			
+			gate = new FlxSprite(32 * 12, 32 * 13, Gate);
+			items.add(gate);
+			
+			items.add(swingset);
 			
 			tilemap = new FlxTilemap();
 			tilemap.loadMap(new Level1, Spritesheet, 32, 32, FlxTilemap.OFF);
@@ -119,8 +155,21 @@ package
 			items.add(station);
 			
 			items.sort();
-			dreamboy = new FlxSprite(32 * 11, 32 * 42, Dreamboy);
+			dreamboy = new FlxSprite(32 * 50, 32 * 22, Dreamboy);
 			items.add(dreamboy);
+			items.add(new FlxSprite(32 * 39, 32 * 17, Bookshelf));
+			items.add(new FlxSprite(32 * 40, 32 * 17, Bookshelf));
+			items.add(new FlxSprite(32 * 44, 32 * 17, Bookshelf));
+			items.add(new FlxSprite(32 * 45, 32 * 17, Bookshelf));
+			items.add(new FlxSprite(32 * 39, 32 * 15, Bookshelf));
+			items.add(new FlxSprite(32 * 40, 32 * 15, Bookshelf));
+			items.add(new FlxSprite(32 * 44, 32 * 15, Bookshelf));
+			items.add(new FlxSprite(32 * 45, 32 * 15, Bookshelf));
+			items.add(new FlxSprite(32 * 39, 32 * 13, Bookshelf));
+			items.add(new FlxSprite(32 * 40, 32 * 13, Bookshelf));
+			items.add(new FlxSprite(32 * 44, 32 * 13, Bookshelf));
+			items.add(new FlxSprite(32 * 45, 32 * 13, Bookshelf));
+			items.add(new FlxSprite(32 * 50, 32 * 22, Bookshelf));
 			
 			hole = new FlxSprite(32 * 4, 32 * 16, Hole)
 			add(hole);
@@ -142,14 +191,15 @@ package
 			items.add(jonson);
 			items.add(sara);
 			vanbox.immovable = true;
+			gate.immovable = true;
 			
 			vanbox.allowCollisions = FlxObject.ANY;
 			player.allowCollisions = FlxObject.ANY;
 			
 			FlxG.camera.follow(focus, FlxCamera.STYLE_TOPDOWN);
 			
-			FlxG.worldBounds.width = 18 * 32 * 2;
-			FlxG.worldBounds.height = 12 * 32 * 2;
+			FlxG.worldBounds.width = 40 * 32 * 3;
+			FlxG.worldBounds.height = 24 * 32 * 2;
 			prompt = new FlxText(0, 0, 64);
 			prompt.setFormat(null, 8, 0xefefef, "center");
 			prompt.shadow = 1;
@@ -163,6 +213,16 @@ package
 			playerlight.alpha = .5;
 			
 			lines = new Array();
+			if (Counter.staticpoint == 3)
+			{
+				FlxG.camera.follow(focus, FlxCamera.STYLE_LOCKON);
+				
+				goDream();
+			}
+			if (Counter.staticpoint == 1)
+			{
+				FlxG.playMusic(BlipMellow);
+			}
 		}
 		
 		public function makelight(locX:int = 0, locY:int = 0):void
@@ -175,7 +235,18 @@ package
 		override public function draw():void
 		{
 			lightsgroup.visible = true;
-			darkness.fill(0xff555555);
+			if (player.x > 62 * 32)
+			{
+				darkness.fill(0xffffffff);
+			}
+			else if (player.x < 27 * 32)
+			{
+				darkness.fill(0xff555555);
+			}
+			else
+			{
+				darkness.fill(0xff111111);
+			}
 			super.draw();
 		}
 		
@@ -210,7 +281,18 @@ package
 							if (line.indexOf("I think.") != -1)
 							{
 								DialogueManager.hide();
-								FlxG.fade(0xffffff, 4, launchVan);
+								FlxG.fade(0x000000, 6, launchVan);
+								jonson.y += 1000
+								jonson.offset.y += 1000
+								
+							}
+							if (line.indexOf("We have nothing left to talk about.") != -1)
+							{
+								door.y = 32 * 6 + 21;
+							}
+							if (line.indexOf("pretty lame, i guess") != -1)
+							{
+								FlxG.fade(0xff000000, 5, launchVan);
 							}
 							DialogueManager.nextMessage(line);
 							FlxG.stage.addChild(DialogueManager.profile);
@@ -280,8 +362,15 @@ package
 			
 			focus.x = player.x;
 			focus.y = player.y - 32;
+			if (player.x > 62 * 32)
+			{
+				player.offset.y = 64 + 16;
+				player.height = 4;
+				focus.y = player.y - 64
+			}
 			FlxG.collide(player, vanbox);
 			FlxG.collide(player, tilemap);
+			FlxG.collide(player, gate);
 			if (FlxG.camera.alpha < 1)
 			{
 				FlxG.camera.alpha += .01;
@@ -351,7 +440,7 @@ package
 					player.play("idle");
 				}
 			}
-			else if (Math.abs(Math.sqrt(Math.pow(player.x - dreamboy.x, 2) + Math.pow(player.y - dreamboy.y, 2))) < 100)
+			else if (Math.abs(Math.sqrt(Math.pow(player.x - dreamboy.x, 2) + Math.pow(player.y - dreamboy.y, 2))) < 80)
 			{
 				prompt.alpha += .1
 				prompt.text = "what's this?";
@@ -373,7 +462,157 @@ package
 					player.play("idle");
 				}
 			}
-			else if (Math.abs(Math.sqrt(Math.pow(player.x - hole.x, 2) + Math.pow(player.y - hole.y, 2))) < 100)
+			else if (Math.abs(player.x - swingset.x - 50) < 100)
+			{
+				prompt.alpha += .1
+				prompt.color = 0xaaaaaa;
+				prompt.text = "hello?";
+				prompt.x = swingset.x + swingset.frameWidth / 2 - prompt.width / 2;
+				prompt.y = swingset.y + swingset.height - prompt.height;
+				if (FlxG.keys.justPressed("K"))
+				{
+					prompt.alpha = 0;
+					prompt.text = "";
+					if (boydone == false)
+					{
+						boydone = true;
+						lines.push("Vanessa: ... hello?");
+						lines.push("Boy: ... Umm. Hi.");
+						lines.push("Vanessa: Where am I?");
+						lines.push("Boy: You're playing a video game.");
+						lines.push("Vanessa: Not much of a video game, really.");
+						lines.push("Boy: This is all I want it to be.");
+						lines.push("Vanessa: Could we make it a game of tennis? I like tennis.");
+						lines.push("Boy: No, I think I'll sit here on this swingset.");
+						lines.push("Boy: I rather like this swingset.");
+						lines.push("Vanessa: Are you alright?");
+						lines.push("Boy: Absolutely.");
+						lines.push("Vanessa: Are you sure we can't play tennis in here?");
+						lines.push("Boy: I haven't changed the settings in here for years, why would I change it now?");
+						lines.push("Vanessa: Why are you all monochromatic?");
+						lines.push("Boy: Color is just too much for me nowadays.");
+						lines.push("Vanessa: Who are you?");
+						lines.push("Boy: I don't know anymore.");
+						lines.push("Vanessa: Do you remember the war?");
+						lines.push("Boy: I have a painful memory of it, yes. It is only a feeling though. I couldn't tell you the details.");
+						lines.push("Boy: They would come here and tell me all about it, and then one day they stopped coming.");
+						lines.push("Vanessa: How old are you?");
+						lines.push("Boy: I was created by Kusunoki Yamoto, in the year 2022 for Yamaguchi Video Game corporation, headquartered in Tokyo, Japan.");
+						lines.push("Boy: This is all I know.");
+						lines.push("Vanessa: It's been a while, Kusunoki. The world is gone as you know it.");
+						lines.push("Boy: Do not call me Kusunoki, for I'm just one of his Dreamboy 64s. That is all.");
+						lines.push("Vanessa: You seem lonely.");
+						lines.push("Boy: Indeed.");
+						lines.push("Boy: You'd better be going.");
+						lines.push("Vanessa: But I just got here?");
+						lines.push("Boy: We have nothing left to talk about.");
+					}
+					else
+					{
+						lines.push("Boy: There's nothing left to talk about.");
+						lines.push("Vanessa: Wow, rude.");
+					}
+					
+					DialogueManager.nextMessage(lines.shift());
+					FlxG.stage.addChild(DialogueManager.profile);
+					FlxG.stage.addChild(DialogueManager.profile);
+					conv = true;
+					player.velocity.x = player.velocity.y = 0;
+					player.acceleration.x = player.acceleration.y = 0;
+					player.play("idle");
+				}
+			}
+			else if (Math.abs(Math.sqrt(Math.pow(player.x - dreamboy.x, 2) + Math.pow(player.y - dreamboy.y, 2))) < 80)
+			{
+				prompt.alpha += .1
+				prompt.text = "what's this?";
+				prompt.x = dreamboy.x + dreamboy.frameWidth / 2 - prompt.width / 2;
+				prompt.y = dreamboy.y - dreamboy.height - prompt.height;
+				if (FlxG.keys.justPressed("K"))
+				{
+					prompt.alpha = 0;
+					prompt.text = "";
+					lines.push("Vanessa: Hmm. Never seen one of these before.");
+					lines.push("Vanessa: It looks neat, maybe Jonson will know what it is.");
+					lines.push("Vanessa: No sense in leaving it here by itself, right?");
+					DialogueManager.nextMessage(lines.shift());
+					FlxG.stage.addChild(DialogueManager.profile);
+					FlxG.stage.addChild(DialogueManager.profile);
+					conv = true;
+					player.velocity.x = player.velocity.y = 0;
+					player.acceleration.x = player.acceleration.y = 0;
+					player.play("idle");
+				}
+			}
+			else if (Math.abs(Math.sqrt(Math.pow(player.x - door.x, 2) + Math.pow(player.y - door.y - 30, 2))) < 100)
+			{
+				prompt.alpha += .1
+				prompt.color = 0xff9999;
+				prompt.text = "goodbye";
+				prompt.shadow = 0
+				prompt.x = door.x + door.frameWidth / 2 - prompt.width / 2 - 6;
+				prompt.y = door.y - door.height - prompt.height + 40;
+				if (FlxG.keys.justPressed("K"))
+				{
+					Counter.staticpoint = 0;
+					player.immovable = true;
+					FlxG.fade(0xff000000, 3, endDialogue);
+				}
+			}
+			else if (Math.abs(Math.sqrt(Math.pow(player.x - door.x, 2) + Math.pow(player.y - door.y - 30, 2))) < 100)
+			{
+				prompt.alpha += .1
+				prompt.color = 0xff9999;
+				prompt.text = "goodbye";
+				prompt.shadow = 0
+				prompt.x = door.x + door.frameWidth / 2 - prompt.width / 2 - 6;
+				prompt.y = door.y - door.height - prompt.height + 40;
+				if (FlxG.keys.justPressed("K"))
+				{
+					Counter.staticpoint = 0;
+					player.immovable = true;
+					FlxG.fade(0xff000000, 3, endDialogue);
+				}
+			}
+			else if (Math.abs(Math.sqrt(Math.pow(player.x - computer.x, 2) + Math.pow(player.y - computer.y - 30, 2))) < 100)
+			{
+				prompt.alpha += .1
+				prompt.text = "tinker?";
+				prompt.x = Math.round(computer.x + computer.frameWidth / 2 - prompt.width / 2);
+				prompt.y = Math.round(computer.y + computer.height - 64);
+				if (FlxG.keys.justPressed("K"))
+				{
+					prompt.alpha = 0;
+					prompt.text = "";
+					lines.push("Vanessa: That should open that gate.");
+					DialogueManager.nextMessage(lines.shift());
+					FlxG.stage.addChild(DialogueManager.profile);
+					FlxG.stage.addChild(DialogueManager.profile);
+					conv = true;
+					player.velocity.x = player.velocity.y = 0;
+					player.acceleration.x = player.acceleration.y = 0;
+					player.play("idle");
+					gate.x -= 2000;
+					computer.x += 1000;
+					computer.offset.x += 1000;
+				}
+			}
+			
+			else if (player.x > 36 * 32 && player.x < 49 * 32 && player.y < 32 * 13)
+			{
+				prompt.alpha += .1
+				prompt.text = "ascend";
+				prompt.x = 32 * 42 - 16;
+				prompt.y = 32 * 10;
+				if (FlxG.keys.justPressed("K"))
+				{
+					player.x = 7 * 32 + 10;
+					player.y = 16 * 32;
+					FlxG.camera.alpha = 0;
+				}
+				
+			}
+			else if (Math.abs(Math.sqrt(Math.pow(player.x - hole.x, 2) + Math.pow(player.y - hole.y - 30, 2))) < 100)
 			{
 				prompt.alpha += .1
 				prompt.text = "descend";
@@ -381,14 +620,21 @@ package
 				prompt.y = hole.y - hole.height - prompt.height;
 				if (FlxG.keys.justPressed("K"))
 				{
-					prompt.alpha = 0;
-					prompt.text = "";
-					player.x = 42 * 32;
-					player.y = 14*32
+					goCellar();
 				}
+				
+			}
+			else if (Math.abs(Math.sqrt(Math.pow(player.x - gate.x, 2) + Math.pow(player.y - gate.y - 30, 2))) < 100)
+			{
+				prompt.alpha += .1
+				prompt.text = "locked";
+				prompt.x = gate.x + gate.frameWidth / 2 - gate.width / 2 - 16;
+				prompt.y = gate.y - hole.height - gate.height + 32;
+				
 			}
 			else
 			{
+				prompt.color = 0xffffff;
 				if (prompt.alpha > 0)
 				{
 					prompt.alpha -= .05;
@@ -415,6 +661,28 @@ package
 		{
 			Counter.staticpoint++;
 			FlxG.switchState(new VanState);
+		}
+		
+		public function goDream():void
+		{
+			player.x = 67 * 32;
+			player.y = 9 * 32 + 16;
+			FlxG.camera.alpha = 0;
+		
+		}
+		
+		public function goCellar():void
+		{
+			player.x = 42 * 32 + 10;
+			player.y = 14 * 32;
+			FlxG.camera.alpha = 0;
+		}
+		
+		public function endDialogue():void
+		{
+			conv = true;
+			lines.push("Jonson: How was the game?");
+			lines.push("Vanessa: Pretty lame, I guess.");
 		}
 	}
 
