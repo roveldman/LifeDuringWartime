@@ -89,17 +89,19 @@ package
 			{
 				profile = new Vanessa();
 			}
-			if (next.substring(0, 3) == "Sar")
+			else if (next.substring(0, 3) == "Sar")
 			{
 				profile = new Sara();
 			}
-			if (next.substring(0, 3) == "Jon")
+			else if (next.substring(0, 3) == "Jon")
 			{
 				profile = new Jonson();
 			}
-			if (next.substring(0, 3) == "Boy")
+			else if (next.substring(0, 3) == "Boy")
 			{
 				profile = new Boy();
+			} else {
+				profile = new Bitmap(new BitmapData(96, 96, false, 0xFF888888));
 			}
 			profile.x = 12;
 			profile.y = 12;
@@ -109,10 +111,10 @@ package
 				finishText();
 				return;
 			}
-
+			
 			// TODO: add shadow
 			
-			textView.text = "";			
+			textView.text = "";
 			messageArray = new Array();
 			messageArray = next.split("");
 			finishText();
@@ -127,13 +129,17 @@ package
 					printing = false;
 					return;
 				}
-				if (character != " " && character != "!" && character != "," && character != "."&& character != "?"&& character != ":")
+				if (character != " " && character != "!" && character != "," && character != "." && character != "?" && character != ":")
 				{
 					FlxG.play(CharPrint, textView.alpha);
 					timer.delay = 50;
-				} else if (character == "." || character == "," || character == "?" || character == ":"){
+				}
+				else if (character == "." || character == "," || character == "?" || character == ":")
+				{
 					timer.delay = 300;
-				} else {
+				}
+				else
+				{
 					timer.delay = 0;
 				}
 				

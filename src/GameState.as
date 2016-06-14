@@ -290,10 +290,6 @@ package
 							{
 								door.y = 32 * 6 + 21;
 							}
-							if (line.indexOf("pretty lame, i guess") != -1)
-							{
-								FlxG.fade(0xff000000, 5, launchVan);
-							}
 							DialogueManager.nextMessage(line);
 							FlxG.stage.addChild(DialogueManager.profile);
 						}
@@ -559,21 +555,6 @@ package
 					FlxG.fade(0xff000000, 3, endDialogue);
 				}
 			}
-			else if (Math.abs(Math.sqrt(Math.pow(player.x - door.x, 2) + Math.pow(player.y - door.y - 30, 2))) < 100)
-			{
-				prompt.alpha += .1
-				prompt.color = 0xff9999;
-				prompt.text = "goodbye";
-				prompt.shadow = 0
-				prompt.x = door.x + door.frameWidth / 2 - prompt.width / 2 - 6;
-				prompt.y = door.y - door.height - prompt.height + 40;
-				if (FlxG.keys.justPressed("K"))
-				{
-					Counter.staticpoint = 0;
-					player.immovable = true;
-					FlxG.fade(0xff000000, 3, endDialogue);
-				}
-			}
 			else if (Math.abs(Math.sqrt(Math.pow(player.x - computer.x, 2) + Math.pow(player.y - computer.y - 30, 2))) < 100)
 			{
 				prompt.alpha += .1
@@ -668,7 +649,6 @@ package
 			player.x = 67 * 32;
 			player.y = 9 * 32 + 16;
 			FlxG.camera.alpha = 0;
-		
 		}
 		
 		public function goCellar():void
@@ -681,8 +661,12 @@ package
 		public function endDialogue():void
 		{
 			conv = true;
+			
 			lines.push("Jonson: How was the game?");
 			lines.push("Vanessa: Pretty lame, I guess.");
+			lines.push("\t\t\tFin");
+			DialogueManager.nextMessage(lines.shift());
+			FlxG.stage.addChild(DialogueManager.profile);
 		}
 	}
 
